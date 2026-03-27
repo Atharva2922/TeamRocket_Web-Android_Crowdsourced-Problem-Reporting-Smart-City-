@@ -1,9 +1,20 @@
 "use client";
 
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { DashboardPage } from '@/components/admin/DashboardPage';
 import { Navbar } from '@/components/admin/Navbar';
 import { Sidebar } from '@/components/admin/Sidebar';
+
+const MapViewPanel = dynamic(
+  () => import('@/components/admin/MapViewPanel').then((module) => module.MapViewPanel),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[60vh] flex items-center justify-center text-slate-500">Loading map view...</div>
+    ),
+  },
+);
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -17,8 +28,9 @@ export default function Page() {
 
         <main className="p-8 max-w-7xl mx-auto w-full">
           {activeTab === 'dashboard' && <DashboardPage />}
+          {activeTab === 'map' && <MapViewPanel />}
 
-          {activeTab !== 'dashboard' && (
+          {activeTab !== 'dashboard' && activeTab !== 'map' && (
             <div className="flex flex-col items-center justify-center h-[60vh] text-slate-400">
               <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
                 <span className="text-2xl">🚧</span>
